@@ -4,9 +4,10 @@ import numpy as np
 import cv2
 from tqdm import tqdm
 from sklearn.model_selection import train_test_split
+from copy import deepcopy
 
 HP = {
-    'learning_rate': 0.001,
+    'learning_rate': 0.01,
     'batch_size': 1,
     'epochs': 5,
     'output_size' : 11,
@@ -35,7 +36,7 @@ def preprocess(src):
     pattern_value_list = []
     for i in range(height - 2):
         for j in range(width - 2):
-            roi = image[i:i + 3, j:j + 3]
+            roi = deepcopy(image[i:i + 3, j:j + 3])
             threshold = roi[1, 1]
             roi[roi <= threshold] = 0
             roi[roi > threshold] = 1
@@ -46,7 +47,7 @@ def preprocess(src):
 
 def get_hist_num(roi):
     return roi[0, 1] * 128 + roi[0, 0] * 64 + roi[1, 0] * 32 + roi[2, 0] * 16 + roi[2, 1] * 8 + roi[2, 2] * 4 + roi[
-        1, 2] * 2 + roi[0, 2] * 1
+        1, 2] * 2 + roi[0, 2]
 
 
 def get_histogram(pattern_value_list):
@@ -78,8 +79,8 @@ def get_KTH():
     #     X.append(preprocess(f))
     # y = df['label']
     # df2 = pd.DataFrame({'X':X, 'Y':y})
-    # df2.to_csv('KTH_df.csv')
-    df = pd.read_csv('KTH_df.csv')
+    # df2.to_csv('KTH_df3.csv')
+    df = pd.read_csv('KTH_df3.csv')
     df = df.drop('Unnamed: 0', axis=1)
     X = [string_to_numpy_array(x)+epsilon for x in df['X']]
     y = df['Y']

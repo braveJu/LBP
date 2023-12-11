@@ -3,7 +3,7 @@ import numpy as np
 import pandas as pd
 import torch.nn as nn
 import torch
-from utils import HP, LABEL_DICT, get_KTH
+from utils import HP, LABEL_DICT, get_KTH, preprocess
 from models import DongjuModel
 from dataset import KTHDataset
 from torch.utils.data import DataLoader
@@ -85,8 +85,10 @@ from sklearn.pipeline import make_pipeline
 
 
 if __name__ =='__main__':
+
     X_train, X_test, y_train, y_test = get_KTH()
     clf = make_pipeline(StandardScaler(), SVC(gamma='auto'))
     clf.fit(X_train, y_train)
     pred_y = clf.predict(X_test)
     print(f"정확도 : {sum(pred_y == y_test)/len(pred_y)}")
+
